@@ -87,9 +87,14 @@ def main(argv=None):
         return 2
 
     if args.tudo:
+        from .report_pdf import HAS_REPORTLAB
         os.makedirs(args.tudo, exist_ok=True)
         base = os.path.splitext(os.path.basename(files[0]))[0]
-        args.pdf = args.pdf or os.path.join(args.tudo, f'relatorio_{base}.pdf')
+        if not args.pdf:
+            if HAS_REPORTLAB:
+                args.pdf = os.path.join(args.tudo, f'relatorio_{base}.pdf')
+            else:
+                print('reportlab não instalado: PDF ignorado (pip install reportlab).', file=sys.stderr)
         args.txt = args.txt or os.path.join(args.tudo, f'relatorio_{base}.txt')
         args.csv = args.csv or os.path.join(args.tudo, 'csv')
         args.json = args.json or os.path.join(args.tudo, f'dados_{base}.json')

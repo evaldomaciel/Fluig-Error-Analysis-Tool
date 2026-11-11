@@ -137,7 +137,9 @@ class _Builder:
         self.story.append(t)
         self.story.append(Spacer(1, 6))
 
-    def bar(self, value, peak, color, width=4.6 * cm, height=7):
+    def bar(self, value, peak, color, width=None, height=7):
+        if width is None:
+            width = 4.6 * cm
         d = Drawing(width, height)
         if value and peak:
             d.add(Rect(0, 1, max(1.5, width * value / peak), height - 2, fillColor=colors.HexColor(color),
