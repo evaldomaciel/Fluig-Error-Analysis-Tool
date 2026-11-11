@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fluig-log-analyzer"
+dynamic = ["version"]
+description = "Análise de erros e lentidão em logs do servidor TOTVS Fluig, com relatórios em texto, CSV, JSON e PDF"
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = []
+
+[project.optional-dependencies]
+pdf = ["reportlab>=3.6"]
+
+[project.scripts]
+fluig-log-analyzer = "fluig_log_analyzer.cli:main"
+
+[tool.setuptools]
+packages = ["fluig_log_analyzer"]
+
+[tool.setuptools.dynamic]
+version = { attr = "fluig_log_analyzer.__version__" }

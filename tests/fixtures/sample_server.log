@@ -1,0 +1,44 @@
+2026-11-09 08:00:00,100 INFO  [com.datasul.technology.webdesk.dataset.business.DatasetBO] (default task-10) Executando Dataset com ID ds_lento_teste do tipo Avançado.
+2026-11-09 08:00:01,000 INFO  [com.datasul.technology.webdesk.customization.ScriptingLog] (default task-10) {
+  "fieldName" : "consulta",
+  "value" : "x"
+}
+2026-11-09 08:00:31,000 WARN  [com.fluig.monitoring.jschronos.JSChronos] (default task-10) CustomizationManagerImpl.invokeFunction.createDataset executou por 30 segundos
+2026-11-09 08:00:31,200 WARN  [com.fluig.monitoring.jschronos.JSChronos] (default task-10) DatasetFactory.getDataset.ds_lento_teste executou por 30 segundos
+2026-11-09 08:01:00,000 INFO  [com.datasul.technology.webdesk.workflow.business.ProcessHistoryBO] (default task-11) CompanyId: 1 - ProcessInstanceId: 1001
+2026-11-09 08:01:00,500 ERROR [com.datasul.technology.webdesk.workflow.business.WorkflowBO] (default task-11) ERRO registerUserKnowledgeTask: A different object with the same identifier value was already associated with the session : [com.datasul.technology.webdesk.workflow.model.UserKnowledgeTask#com.datasul.technology.webdesk.model.temp.UserKnowledgeTaskPK[companyId=1, colleagueId=joao.silva, processInstanceId=1001, movementSequence=3, transferredSequence=1]]: com.totvs.technology.foundation.common.exception.FDNCreateException: A different object with the same identifier value was already associated with the session : [UserKnowledgeTaskPK[companyId=1, colleagueId=joao.silva, processInstanceId=1001, movementSequence=3, transferredSequence=1]]
+	at com.fluig.base//com.totvs.technology.foundation.common.AbstractDAO.create(AbstractDAO.java:117)
+	at deployment.fluig-server.ear.ecm-ejb.jar//com.fluig.ecm.workflow.service.UserKnowledgeTaskServiceBean.createUserKnowledgeTask(UserKnowledgeTaskServiceBean.java:50)
+	at deployment.fluig-server.ear.ecm-ejb.jar//com.datasul.technology.webdesk.workflow.business.WorkflowBO.registerUserKnowledgeTask(WorkflowBO.java:900)
+	at deployment.fluig-server.ear.ecm-ejb.jar//com.datasul.technology.webdesk.workflow.business.WorkflowBO.getUserPermissionsProcess(WorkflowBO.java:800)
+	at deployment.fluig-server.ear.ecm-rest.war//com.totvs.technology.ecm.services.workflowview.WorkflowViewRest.getAttachments(WorkflowViewRest.java:300)
+Caused by: javax.persistence.EntityExistsException: A different object with the same identifier value was already associated with the session : [UserKnowledgeTask#1]
+	at org.hibernate@5.3.13.Final//org.hibernate.internal.ExceptionConverterImpl.convert(ExceptionConverterImpl.java:123)
+	... 20 more
+2026-11-09 08:01:00,501 ERROR [com.datasul.technology.webdesk.workflow.model.UserKnowledgeTask] (default task-11) A different object with the same identifier value was already associated with the session : [com.datasul.technology.webdesk.workflow.model.UserKnowledgeTask#com.datasul.technology.webdesk.model.temp.UserKnowledgeTaskPK[companyId=1, colleagueId=joao.silva, processInstanceId=1001, movementSequence=3, transferredSequence=1]]
+2026-11-09 08:02:00,000 ERROR [com.datasul.technology.webdesk.workflow.business.WorkflowBO] (default task-12) ERRO registerUserKnowledgeTask: A different object with the same identifier value was already associated with the session : [com.datasul.technology.webdesk.workflow.model.UserKnowledgeTask#com.datasul.technology.webdesk.model.temp.UserKnowledgeTaskPK[companyId=1, colleagueId=maria.souza, processInstanceId=1001, movementSequence=3, transferredSequence=1]]: com.totvs.technology.foundation.common.exception.FDNCreateException: A different object with the same identifier value was already associated with the session : [UserKnowledgeTaskPK[companyId=1, colleagueId=maria.souza, processInstanceId=1001, movementSequence=3, transferredSequence=1]]
+	at com.fluig.base//com.totvs.technology.foundation.common.AbstractDAO.create(AbstractDAO.java:117)
+	at deployment.fluig-server.ear.ecm-ejb.jar//com.fluig.ecm.workflow.service.UserKnowledgeTaskServiceBean.createUserKnowledgeTask(UserKnowledgeTaskServiceBean.java:50)
+	at deployment.fluig-server.ear.ecm-ejb.jar//com.datasul.technology.webdesk.workflow.business.WorkflowBO.registerUserKnowledgeTask(WorkflowBO.java:900)
+	at deployment.fluig-server.ear.ecm-ejb.jar//com.datasul.technology.webdesk.workflow.business.WorkflowBO.getUserPermissionsProcess(WorkflowBO.java:800)
+	at deployment.fluig-server.ear.ecm-rest.war//com.totvs.technology.ecm.services.workflowview.WorkflowViewRest.getAttachments(WorkflowViewRest.java:300)
+Caused by: javax.persistence.EntityExistsException: A different object with the same identifier value was already associated with the session : [UserKnowledgeTask#2]
+	... 20 more
+2026-11-09 08:05:00,000 ERROR [stderr] (default task-20) java.util.concurrent.ExecutionException: java.io.IOException: Asynchronous failure: No trusted certificate found
+2026-11-09 08:05:00,001 ERROR [stderr] (default task-20) 	at java.base/java.util.concurrent.FutureTask.report(FutureTask.java:122)
+2026-11-09 08:05:00,002 ERROR [stderr] (default task-20) 	at java.base/java.util.concurrent.FutureTask.get(FutureTask.java:191)
+2026-11-09 08:05:00,003 ERROR [stderr] (default task-20) Caused by: sun.security.validator.ValidatorException: No trusted certificate found
+2026-11-09 08:05:00,004 ERROR [stderr] (default task-20) 	at java.base/sun.security.validator.SimpleValidator.buildTrustedChain(SimpleValidator.java:411)
+2026-11-09 08:06:00,000 ERROR [com.fluig.handler.request.HttpServerExchangeHandler] (default task-21) Problemas ao buscar a validação de sessão da url https://fluig.exemplo.com.br/portal/j_security_check: javax.ws.rs.ProcessingException: RESTEASY004655: Unable to invoke request: javax.net.ssl.SSLHandshakeException: PKIX path validation failed
+	at org.jboss.resteasy.resteasy-jaxrs@3.9.1.Final//org.jboss.resteasy.client.jaxrs.engines.ApacheHttpClient4Engine.invoke(ApacheHttpClient4Engine.java:325)
+Caused by: java.security.cert.CertificateExpiredException: NotAfter: Mon Nov 02 08:52:46 BRT 2026
+	at java.base/sun.security.x509.CertificateValidity.valid(CertificateValidity.java:274)
+2026-11-09 08:07:00,000 ERROR [com.datasul.technology.webdesk.customization.CustomizationManager] (default task-22) [Solicitação: 2001] - Processo: compra_teste - versão: 5 - Usuário Executor : ana.lima - Gestor : Não - Substituto : Não - Estado atual : 4 - Estado destino : 5 - Executando evento : validateFormERRO AO EXECUTAR SCRIPT -> NOK - Obrigatório preencher Centro Custo (validateForm#25)
+2026-11-09 08:07:30,000 ERROR [com.datasul.technology.webdesk.customization.CustomizationManager] (default task-23) [Solicitação: 2002] - Processo: reembolso_teste - versão: 2 - Usuário Executor : pedro.alves - Gestor : Não - Substituto : Não - Estado atual : 0 - Executando evento : displayFieldsERRO AO EXECUTAR SCRIPT -> NOK - TypeError: Cannot read property "length" from null (displayFields#48)
+2026-11-09 08:08:00,000 ERROR [com.datasul.technology.webdesk.util.EMailSenderImpl] (Thread-5 (ActiveMQ-client-global-threads)) Erro 432 ao enviar email: : com.sun.mail.smtp.SMTPSendFailedException: 432 4.3.2 Concurrent connections limit exceeded.
+2026-11-09 08:20:00,000 WARN  [com.fluig.monitoring.jschronos.JSChronos] (EJB default - 3) DatasetMetaListServiceBean.datasetSync executou por 900 segundos
+2026-11-09 08:20:01,000 ERROR [com.datasul.technology.webdesk.taskmanager.notifier.Notifier] (EJB default - 4) Ja existe um processo de sincronização deste dataset em execução! DatasetId: ds_sync_teste: java.lang.Exception: Ja existe um processo de sincronização deste dataset em execução!
+2026-11-09 08:24:42,000 INFO  [com.datasul.technology.webdesk.workflow.business.ProcessSearcherBO] (EJB ASYNC - 11) ## exportProcessSearcher # Tempo total # total 1114s
+2026-11-09 08:24:42,000 INFO  [com.datasul.technology.webdesk.workflow.business.ProcessSearcherBO] (EJB ASYNC - 11) ## exportProcessSearcher # Iniciando verificação de stateData (atividades) e formData (formularios) # total 903s
+2026-11-09 08:24:42,000 INFO  [com.datasul.technology.webdesk.workflow.business.ProcessSearcherBO] (EJB ASYNC - 11) ## exportProcessSearcher # Exportando dados principais do processo # total 112s, executado 9238 vezes ( média 12ms, mínimo de 1ms e máximo de 208ms)
+2026-11-09 08:30:00,000 INFO  [com.datasul.technology.webdesk.util.TokenManager] (EJB default - 1) clean

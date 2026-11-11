@@ -1,0 +1,2 @@
+# Necessário apenas para gerar o relatório em PDF (--pdf / --tudo).
+reportlab>=3.6
