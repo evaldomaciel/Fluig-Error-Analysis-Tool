@@ -127,6 +127,12 @@ uso interno. Logs e relatórios gerados ficam fora do git (`.gitignore`).
 python -m unittest -v
 ```
 
+## Contribuições
+
+Contribuições são bem-vindas por meio de pull requests. Antes de enviar uma alteração, consulte
+[CONTRIBUTING.md](CONTRIBUTING.md). Os pull requests são validados automaticamente; a branch principal
+deve aceitar alterações somente após revisão e aprovação.
+
 Estrutura:
 
 | Módulo | Responsabilidade |
