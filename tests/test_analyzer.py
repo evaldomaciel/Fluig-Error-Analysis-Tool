@@ -5,8 +5,10 @@ import shutil
 import tempfile
 import unittest
 from contextlib import redirect_stderr, redirect_stdout
+from unittest import mock
 
 from fluig_log_analyzer.analysis import Analysis, Config
+from fluig_log_analyzer import report_pdf
 from fluig_log_analyzer.cli import main
 from fluig_log_analyzer.parser import ParseStats, iter_records
 from fluig_log_analyzer.report_text import render
@@ -158,6 +160,25 @@ class CliTest(unittest.TestCase):
     def test_missing_file(self):
         with redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()):
             self.assertEqual(main(['nao_existe.log', '-q']), 2)
+
+
+@unittest.skipUnless(report_pdf.HAS_REPORTLAB, 'reportlab não instalado')
+class PdfFontTest(unittest.TestCase):
+    def setUp(self):
+        saved = dict(vars(report_pdf._Fonts))
+        self.addCleanup(lambda: [setattr(report_pdf._Fonts, k, saved[k])
+                                 for k in ('regular', 'bold', 'mono', 'unicode')])
+
+    def test_macos_supplemental_fonts(self):
+        mac = '/System/Library/Fonts/Supplemental/'
+        found = []
+        with mock.patch.object(report_pdf.os.path, 'exists', side_effect=lambda p: p.startswith(mac)), \
+                mock.patch.object(report_pdf, 'TTFont', side_effect=lambda name, path: found.append(path)), \
+                mock.patch.object(report_pdf.pdfmetrics, 'registerFont'), \
+                mock.patch.object(report_pdf.pdfmetrics, 'registerFontFamily'):
+            report_pdf._setup_fonts()
+        self.assertTrue(report_pdf._Fonts.unicode)
+        self.assertEqual(found, [mac + 'Arial.ttf', mac + 'Arial Bold.ttf', mac + 'Courier New.ttf'])
 
 
 if __name__ == '__main__':
