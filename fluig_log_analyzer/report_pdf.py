@@ -28,6 +28,8 @@ FONT_CANDIDATES = [
      '/usr/share/fonts/dejavu/DejaVuSansMono.ttf'),
     ('/usr/share/fonts/TTF/DejaVuSans.ttf', '/usr/share/fonts/TTF/DejaVuSans-Bold.ttf',
      '/usr/share/fonts/TTF/DejaVuSansMono.ttf'),
+    ('/System/Library/Fonts/Supplemental/Arial.ttf', '/System/Library/Fonts/Supplemental/Arial Bold.ttf',
+     '/System/Library/Fonts/Supplemental/Courier New.ttf'),
     ('/Library/Fonts/Arial.ttf', '/Library/Fonts/Arial Bold.ttf', '/Library/Fonts/Courier New.ttf'),
 ]
 

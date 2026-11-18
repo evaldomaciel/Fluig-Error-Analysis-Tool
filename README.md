@@ -4,7 +4,7 @@ Ferramenta de linha de comando para analisar o `server.log` do **TOTVS Fluig** (
 separa ruído de problema real, investiga a origem dos erros mais frequentes e identifica causas de lentidão.
 Gera relatório no terminal, em texto, CSV, JSON e **PDF**.
 
-Roda em Windows e Linux, lê o arquivo em streaming (logs de centenas de MB sem carregar tudo na memória) e
+Roda em Windows, Linux e macOS, lê o arquivo em streaming (logs de centenas de MB sem carregar tudo na memória) e
 não precisa de nenhum serviço externo.
 
 ## Requisitos
