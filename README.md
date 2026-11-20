@@ -73,7 +73,8 @@ Sem instalar, troque `fluig-log-analyzer` por `python -m fluig_log_analyzer` (de
 - Normaliza as mensagens (números, UUIDs, usuários) para agrupar ocorrências iguais em *assinaturas*.
 - Une erros de loggers diferentes na mesma thread e no mesmo segundo em um único *incidente*.
 - Classifica por tema: SSL, SMTP, banco/transação, memória, bug de script, validação de negócio,
-  permissão, arquivo/volume, ruído de conexão encerrada etc.
+  permissão, arquivo/volume, job de atividades automáticas (tarefa não encontrada), notificação com
+  destinatário inválido, Fluig Analytics, ruído de conexão encerrada e de página WCM sem sessão etc.
 - Separa erros de customização por processo, evento e mensagem (`validateForm`, `displayFields`...).
 - **Investiga** as assinaturas mais frequentes (excluindo ruído): cadeia de chamadas do produto na stack,
   presença ou não de código customizado, o que a thread fazia antes do erro, dispersão por usuários e

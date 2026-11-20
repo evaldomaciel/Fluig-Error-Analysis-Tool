@@ -13,3 +13,5 @@ venv/
 saida/
 relatorios/
 !tests/fixtures/*.log
+marketing/
+relatorio.pdf

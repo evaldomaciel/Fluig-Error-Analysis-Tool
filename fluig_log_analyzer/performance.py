@@ -20,9 +20,19 @@ OTHER_SIGNALS = [
     ('Sincronização de dataset concorrente', r'sincroniza[cç][aã]o deste dataset em execu'),
     ('SMTP: limite de conexões simultâneas', r'Concurrent connections limit'),
     ('Sessão de alerta encerrada', r'AlertAppSender\S*\s.*Session is closed'),
+    ('Executor de job não encontrado (usando admin)', r'executor do job n[aã]o foi encontrado'),
+    ('Campo do formulário não encontrado pelo processo', r'O campo da ficha n[aã]o foi encontrado'),
+    ('Falha em evento de serviço assíncrono', r'Falha ao executar evento de servi[cç]o'),
+    ('ActiveMQ: sessão usada por várias threads', r'AMQ\d+: Invalid concurrent session usage'),
+    ('Miniatura de arquivo que não é imagem', r'File is not an image'),
 ]
 SATURATION_SIGNALS = [(n, re.compile(rx, re.I)) for n, rx in SATURATION_SIGNALS]
 OTHER_SIGNALS = [(n, re.compile(rx, re.I)) for n, rx in OTHER_SIGNALS]
+# Valor a guardar (texto original, sem normalizar) de cada ocorrência de alguns sinais.
+SIGNAL_VALUES = {
+    'Executor de job não encontrado (usando admin)': re.compile(r'Usu[aá]rio (\S+) executor do job', re.I),
+    'Campo do formulário não encontrado pelo processo': re.compile(r'n[aã]o foi encontrado:.*?(\w+)\s*$', re.I),
+}
 
 CHRONO_RE = re.compile(r'^(.*?) executou por (\d+) segundos')
 DS_EXEC_RE = re.compile(r'Executando Dataset com ID (\S+) do tipo (\S+?)\.?$')
@@ -45,6 +55,7 @@ class PerformanceAnalyzer:
         self.signal_count = Counter()
         self.signal_hours = defaultdict(Counter)
         self.signal_sample = {}
+        self.signal_values = defaultdict(Counter)
 
         self.chrono = defaultdict(list)
         self.chrono_hours = defaultdict(Counter)
@@ -104,6 +115,10 @@ class PerformanceAnalyzer:
                 self.signal_count[name] += 1
                 self.signal_hours[name][rec.hour] += 1
                 self.signal_sample.setdefault(name, f'{rec.ts} {rec.level} [{rec.short_cat}] {rec.msg[:240]}')
+                vrx = SIGNAL_VALUES.get(name)
+                v = vrx.search(rec.msg) if vrx else None
+                if v and (v.group(1) in self.signal_values[name] or len(self.signal_values[name]) < 200):
+                    self.signal_values[name][v.group(1)] += 1
 
     def _datasets(self, rec):
         d = DS_EXEC_RE.search(rec.msg)

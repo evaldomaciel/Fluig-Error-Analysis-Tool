@@ -20,6 +20,11 @@ class Finding:
                 'recomendacao': self.recommendation, 'frente': self.owner, 'secao': self.section}
 
 
+def top_values(perf, signal, limit=6):
+    """Valores originais mais frequentes guardados para um sinal (ex.: nomes de pools ou campos)."""
+    return [v for v, _ in perf.signal_values[signal].most_common(limit)]
+
+
 def build_findings(analysis, cfg):
     errors, perf = analysis.errors, analysis.perf
     out = []
@@ -170,7 +175,60 @@ def build_findings(analysis, cfg):
                            'Corrigir os scripts indicados (processo, evento e linha constam na mensagem).',
                            'Customização', 'erros'))
 
+    # --- Job de atividades automáticas -----------------------------------
+    n = inc_theme.get('Tarefa não encontrada (job de atividades automáticas)', 0)
+    if n:
+        g = errors.theme_groups('Tarefa não encontrada (job de atividades automáticas)')[0]
+        out.append(Finding('Média' if n / n_inc >= 0.1 else 'Baixa',
+                           'Job de atividades automáticas falhando: tarefa não encontrada',
+                           f'{fmt_int(n)} incidentes ({n * 100 / n_inc:.0f}% do total), {fmt_int(g.count)} '
+                           'tentativas de concluir/transferir tarefas expiradas (completeExpiredTask) para '
+                           'tarefas que não existem mais para o usuário.',
+                           'Revisar nos processos a ação automática de prazo expirado e o responsável configurado; '
+                           'solicitações já movimentadas ou com responsável inexistente fazem o job falhar a cada '
+                           'execução. Persistindo, abrir chamado na TOTVS com as solicitações afetadas.',
+                           'Customização', 'erros'))
+    n = perf.signal_count['Executor de job não encontrado (usando admin)']
+    if n:
+        pools = top_values(perf, 'Executor de job não encontrado (usando admin)')
+        out.append(Finding('Baixa', 'Executor de atividade automática inexistente (job roda como admin)',
+                           f'{fmt_int(n)} avisos. Executores: {", ".join(pools) or "?"}.',
+                           'Criar os grupos/pools indicados ou corrigir o executor configurado nas atividades '
+                           'automáticas dos processos.', 'Customização', 'lentidao'))
+
+    # --- Notificação --------------------------------------------------------
+    n = inc_theme.get('Notificação com destinatário inválido', 0)
+    if n:
+        out.append(Finding('Baixa', 'Notificações com destinatário inválido', f'{fmt_int(n)} incidentes.',
+                           'Verificar scripts e configurações de notificação que enviam e-mail com destinatário '
+                           'vazio (ex.: campo de e-mail do formulário não preenchido).', 'Customização', 'erros'))
+
+    # --- Campos inexistentes -----------------------------------------------
+    n = perf.signal_count['Campo do formulário não encontrado pelo processo']
+    if n:
+        fields = top_values(perf, 'Campo do formulário não encontrado pelo processo')
+        out.append(Finding('Baixa', 'Processo referencia campo inexistente no formulário',
+                           f'{fmt_int(n)} avisos. Campos: {", ".join(fields) or "?"}.',
+                           'Ajustar as condições/atribuições do processo que usam esses campos ou criá-los no '
+                           'formulário.', 'Customização', 'lentidao'))
+
+    # --- Analytics ----------------------------------------------------------
+    n = inc_theme.get('Analytics (envio de dados / GoodData)', 0)
+    if n:
+        g = errors.theme_groups('Analytics (envio de dados / GoodData)')[0]
+        ev = f'{fmt_int(n)} incidentes no agendamento do Fluig Analytics.'
+        if g.roots:
+            ev += f' Causa raiz: {short(g.root_samples[g.roots.most_common(1)[0][0]], 120)}'
+        out.append(Finding('Baixa', 'Falha no envio de dados do Fluig Analytics', ev,
+                           'Se o Analytics não é utilizado, desativá-lo; caso contrário, verificar com a TOTVS a '
+                           'conexão com o banco usado na extração e o envio ao GoodData.', 'TOTVS', 'erros'))
+
     # --- Avisos menores ----------------------------------------------------
+    amq = perf.signal_count['ActiveMQ: sessão usada por várias threads']
+    if amq >= cfg.minor_warn_threshold:
+        out.append(Finding('Info', 'ActiveMQ: sessão usada por várias threads', f'{fmt_int(amq)} avisos.',
+                           'Aviso interno do produto; acompanhar, sem ação direta da customização.',
+                           'TOTVS', 'lentidao'))
     heur = perf.signal_count['Transações XA heurísticas (Arjuna)']
     if heur >= cfg.minor_warn_threshold:
         out.append(Finding('Baixa', 'Transações XA heurísticas presas', f'{fmt_int(heur)} avisos do Arjuna.',

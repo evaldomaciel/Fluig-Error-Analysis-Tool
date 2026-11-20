@@ -88,6 +88,17 @@ class ErrorTest(unittest.TestCase):
         self.assertEqual(themes['E-mail (SMTP)'], 1)
         self.assertEqual(themes['SSL / certificado'], 2)
 
+    def test_new_themes(self):
+        themes = self.a.errors.incidents_by_theme()
+        self.assertEqual(themes['Tarefa não encontrada (job de atividades automáticas)'], 1)
+        self.assertEqual(themes['Notificação com destinatário inválido'], 1)
+        # NPE sem mensagem: o tema vem do frame onde o erro estourou
+        self.assertEqual(themes['Página WCM sem sessão (ruído)'], 1)
+        # SQLException na causa não deve fazer o Analytics virar erro de banco
+        self.assertEqual(themes['Analytics (envio de dados / GoodData)'], 1)
+        self.assertNotIn('Banco de dados / transação', themes)
+        self.assertNotIn('Outros', themes)
+
 
 class PerformanceTest(unittest.TestCase):
     @classmethod
@@ -120,6 +131,13 @@ class FindingsTest(unittest.TestCase):
         self.assertIn('Datasets customizados lentos', titles)
         self.assertIn('Exportações grandes da pesquisa de solicitações', titles)
         self.assertIn('Nenhum sinal de saturação do servidor no log', titles)
+        self.assertIn('Job de atividades automáticas falhando: tarefa não encontrada', titles)
+        self.assertIn('Pool:Group:GRUPO-INEXISTENTE',
+                      titles['Executor de atividade automática inexistente (job roda como admin)'].evidence)
+        self.assertIn('campoInexistente', titles['Processo referencia campo inexistente no formulário'].evidence)
+        self.assertIn('Notificações com destinatário inválido', titles)
+        self.assertIn('Timer already cancelled', titles['Falha no envio de dados do Fluig Analytics'].evidence)
+        self.assertNotIn('Banco de dados / transação', titles)
         severities = [f.severity for f in a.findings]
         self.assertEqual(severities, sorted(severities, key=['Alta', 'Média', 'Baixa', 'Info'].index))
 

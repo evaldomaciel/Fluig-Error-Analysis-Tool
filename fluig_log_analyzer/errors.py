@@ -21,11 +21,15 @@ THEME_RULES = [
     ('E-mail (SMTP)', r'SMTPSend|EMailSender|Concurrent connections limit|MailConnectException|AuthenticationFailedException'),
     ('Registro de ciência de tarefa (UserKnowledgeTask)',
      r'registerUserKnowledgeTask|UserKnowledgeTask.*different object with the same identifier'),
+    ('Analytics (envio de dados / GoodData)', r'AnalyticsSchedulerBean|GoodDataConsumer|AnalyticsException'),
     ('Banco de dados / transação',
      r'IJ000453|Unable to get managed connection|ARJUNA0121|TransactionReaper|deadlock|lock wait|SQLException|JDBCConnectionException'),
     ('Memória / recursos', r'OutOfMemory|GC overhead|Java heap space|Metaspace|unable to create (new )?native thread'),
     ('Validação de formulário (regra de negócio)',
      r'Obrigat[oó]rio|J[aá] existe um lan[cç]amento|CardIndexListenerException|validateForm.*ERRO AO EXECUTAR SCRIPT'),
+    ('Tarefa não encontrada (job de atividades automáticas)',
+     r'BPMProcessTaskNotFoundException|Tarefa n[aã]o encontrada para o usu[aá]rio'),
+    ('Notificação com destinatário inválido', r'BPMInvalidMailReceiver|Destinat[aá]rio inv[aá]lido'),
     ('Bug em script customizado',
      r'ERRO AO EXECUTAR SCRIPT|TypeError|ReferenceError|EcmaError|ScriptingLog|WrappedException|CardIndexJSListener|ExternalScriptable'),
     ('Permissão / responsabilidade', r'permiss[aã]o|responsabilidade'),
@@ -33,17 +37,19 @@ THEME_RULES = [
     ('Timeout de rede / integração', r'SocketTimeout|Read timed out|connect timed out|ConnectTimeout|UnknownHost|Connection refused'),
     ('Arquivo / volume / indexação', r'LocalStream|File not found|PDFHelper|Solr|private folder|encrypted|NoSuchFile'),
     ('Conexão encerrada pelo cliente (ruído)', r'Broken pipe|Stream is closed|Response already commited|Connection reset'),
+    ('Página WCM sem sessão (ruído)', r'RendererUtils\.fill\w*Variables'),
     ('Renderização WCM / Freemarker', r'freemarker|Freemarker|RequestPipeline|PageServiceBean|renderTheme'),
     ('Genérico (consequência de outro erro)', r'Erro ao movimentar atividade|Erro ao salvar dados d[eo] formul'),
 ]
 THEME_RULES = [(name, re.compile(rx, re.I)) for name, rx in THEME_RULES]
 OTHER_THEME = 'Outros'
-NOISE_THEMES = {'Conexão encerrada pelo cliente (ruído)', 'Genérico (consequência de outro erro)',
-                'Validação de formulário (regra de negócio)', 'Permissão / responsabilidade'}
+NOISE_THEMES = {'Conexão encerrada pelo cliente (ruído)', 'Página WCM sem sessão (ruído)',
+                'Genérico (consequência de outro erro)', 'Validação de formulário (regra de negócio)', 'Permissão / responsabilidade'}
 
 
-def classify(cat, msg, causes):
-    blob = ' '.join([cat, msg] + list(causes))
+def classify(cat, msg, causes, top_frame=''):
+    """Tema do erro pela categoria, mensagem, causas e frame onde o erro estourou (msg vaga, ex. NPE)."""
+    blob = ' '.join([cat, msg, top_frame] + list(causes))
     for rank, (name, rx) in enumerate(THEME_RULES):
         if rx.search(blob):
             return rank, name
@@ -194,7 +200,7 @@ class ErrorAnalyzer:
             return
         self.events += 1
         sig, parts = self._signature(ev)
-        rank, theme = classify(ev.cat, ev.msg, ev.causes)
+        rank, theme = classify(ev.cat, ev.msg, ev.causes, ev.frames[0][0] if ev.frames else '')
         key = (ev.cat, sig[:self.key_len])
         g = self.groups.get(key)
         if g is None:

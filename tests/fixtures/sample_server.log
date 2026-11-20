@@ -41,4 +41,19 @@ Caused by: java.security.cert.CertificateExpiredException: NotAfter: Mon Nov 02 
 2026-11-09 08:24:42,000 INFO  [com.datasul.technology.webdesk.workflow.business.ProcessSearcherBO] (EJB ASYNC - 11) ## exportProcessSearcher # Tempo total # total 1114s
 2026-11-09 08:24:42,000 INFO  [com.datasul.technology.webdesk.workflow.business.ProcessSearcherBO] (EJB ASYNC - 11) ## exportProcessSearcher # Iniciando verificação de stateData (atividades) e formData (formularios) # total 903s
 2026-11-09 08:24:42,000 INFO  [com.datasul.technology.webdesk.workflow.business.ProcessSearcherBO] (EJB ASYNC - 11) ## exportProcessSearcher # Exportando dados principais do processo # total 112s, executado 9238 vezes ( média 12ms, mínimo de 1ms e máximo de 208ms)
+2026-11-09 08:25:00,000 INFO  [com.datasul.technology.webdesk.foundation.job.AbstractFluigJob] (WebdeskScheduler_Worker-0) Usuário Pool:Group:GRUPO-INEXISTENTE executor do job não foi encontrado. Usando admin
+2026-11-09 08:25:01,000 ERROR [com.datasul.technology.webdesk.workflow.business.WorkflowBO] (WebdeskScheduler_Worker-0) Erro ao completar a tarefa: Tarefa não encontrada para o usuário 4ef20412-7687-40a4-b1c8-095c0a92503e: com.fluig.bpm.exception.validation.BPMProcessTaskNotFoundException: Tarefa não encontrada para o usuário 4ef20412-7687-40a4-b1c8-095c0a92503e
+	at deployment.fluig-server.ear//com.datasul.technology.webdesk.workflow.engine.WorkflowEngine.transferTask(WorkflowEngine.java:1)
+	at deployment.fluig-server.ear//com.datasul.technology.webdesk.workflow.business.WorkflowBO.completeExpiredTask(WorkflowBO.java:1)
+2026-11-09 08:25:30,000 WARN  [com.datasul.technology.webdesk.workflow.engine.WorkflowEngine] (default task-30) O campo da ficha não foi encontrado: 1001 campoInexistente
+2026-11-09 08:26:00,000 ERROR [com.fluig.ecm.notification.service.CustomNotificationServiceBean] (default task-31) Destinatário inválido: : com.fluig.bpm.exception.validation.BPMInvalidMailReceiver: Destinatário inválido: 
+2026-11-09 08:27:00,000 WARN  [com.fluig.foundation.api.tools.UnauthenticatedAccessDenied] (default task-32) Unauthenticated Access Denied: /wcm
+2026-11-09 08:27:00,100 ERROR [com.fluig.foundation.api.tools.FDNExceptionMapper] (default task-32) null: java.lang.NullPointerException
+	at deployment.fluig-server.ear.wcm-web.war//com.totvs.technology.wcm.web.util.RendererUtils.fillDefaultVariables(RendererUtils.java:258)
+	at deployment.fluig-server.ear.wcm-web.war//com.totvs.technology.wcm.web.rest.PageServiceRest.renderApplicationPartial(PageServiceRest.java:571)
+2026-11-09 08:28:00,000 ERROR [org.jboss.as.ejb3.timer] (EJB TIMER - 1) WFLYEJB0020: Error invoking timeout for timer: [timedObjectId=analytics.analytics.AnalyticsSchedulerBean]: com.totvs.technology.analytics.exception.AnalyticsException: Error
+	at deployment.analytics-web.war//com.totvs.technology.analytics.service.GoodDataConsumer.sendFiles(GoodDataConsumer.java:306)
+Caused by: java.sql.SQLException: Error
+	at deployment.analytics-web.war//com.totvs.technology.analytics.service.GoodDataConsumer.sendFiles(GoodDataConsumer.java:306)
+Caused by: java.lang.IllegalStateException: Timer already cancelled.
 2026-11-09 08:30:00,000 INFO  [com.datasul.technology.webdesk.util.TokenManager] (EJB default - 1) clean
